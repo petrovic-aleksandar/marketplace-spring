@@ -8,7 +8,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String Login() {
-        return "slavka je pametna!";
+        return "auth!";
     }
     
 
