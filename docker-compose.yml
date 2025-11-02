@@ -1,0 +1,23 @@
+services:
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./WebApi/Images:/usr/share/nginx/html
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: My01pass
+      POSTGRES_DB: marketplace
+    hostname: dbhost
+  
+  marketplace:
+     build:
+       context: .
+       dockerfile: Dockerfile
+     ports:
+      - 8080:8080
