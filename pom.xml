@@ -61,6 +61,34 @@
     		<artifactId>lombok</artifactId>
     		<version>1.18.42</version>
 		</dependency>
+
+		<!-- for jwt tokens -->
+		<dependency>
+  			<groupId>com.auth0</groupId>
+  			<artifactId>java-jwt</artifactId>
+  			<version>4.5.0</version>
+		</dependency>
+
+		<!-- for jwt tokens -->
+		<dependency>
+  			<groupId>com.auth0</groupId>
+  			<artifactId>java-jwt</artifactId>
+  			<version>4.5.0</version>
+		</dependency>
+
+		<!-- for random string gen -->
+		<dependency>
+    		<groupId>org.apache.commons</groupId>
+    		<artifactId>commons-lang3</artifactId>
+    		<version>3.19.0</version>
+		</dependency>
+		
+		<!-- for random string gen -->
+		<dependency>
+    		<groupId>org.apache.commons</groupId>
+    		<artifactId>commons-lang3</artifactId>
+    		<version>3.19.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
