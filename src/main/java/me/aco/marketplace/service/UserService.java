@@ -15,13 +15,8 @@ public class UserService {
     @PersistenceUnit(unitName = "marketplace")
 	private EntityManagerFactory emf;
 
-    private EntityManager em;
-
-    public UserService() {
-        this.em = emf.createEntityManager();
-    }
-
    public User getByUsername(String username) {
+	EntityManager em = emf.createEntityManager();
 		List<User> users = em.createNamedQuery(User.getByUsername, User.class).setParameter("username", username).getResultList();
 		if (users.size() > 0)
 			return users.get(0);
@@ -30,6 +25,7 @@ public class UserService {
 	}
 	
 	public User saveUser(User user) {
+		EntityManager em = emf.createEntityManager();
 		return em.merge(user);
 	} 
     

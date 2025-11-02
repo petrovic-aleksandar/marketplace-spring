@@ -19,12 +19,6 @@ public class AuthService {
     @PersistenceUnit(unitName = "marketplace")
 	private EntityManagerFactory emf;
 
-    private EntityManager em;
-
-    public AuthService() {
-        this.em = emf.createEntityManager();
-    }
-
     public boolean checkPassword(LoginReq req, User u) {
 		if (u.getPassword().equals(SecurityUtil.get_SHA_512_SecurePassword(req.getPassword(), u.getSalt())))
 			return true;
@@ -33,6 +27,7 @@ public class AuthService {
 	}
 	
 	public String createAndSaveRefreshToken(LoginReq req) {
+		EntityManager em = emf.createEntityManager();
 		String refreshToken = RandomStringUtils.secureStrong().nextAlphanumeric(32);
 		User loadedUser = em.createNamedQuery(User.getByUsername, User.class).setParameter("username", req.getUsername()).getResultList().get(0);
 		loadedUser.setRefreshToken(refreshToken);
