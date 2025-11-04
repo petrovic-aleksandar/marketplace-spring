@@ -1,6 +1,14 @@
-FROM tomcat:jre25-temurin-noble
+FROM tomcat:jdk25-temurin-noble
 
-COPY ./target/marketplace-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/marketplace.war
+WORKDIR /app
+
+COPY . .
+
+#ENV JAVA_HOME=/opt/java/openjdk
+
+RUN ./mvnw package -DskipTests -Dmaven.repo.local=/usr/local/tomcat/webapps/marketplace.war
+
+#COPY ./target/marketplace-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/marketplace.war
 
 EXPOSE 8080
 

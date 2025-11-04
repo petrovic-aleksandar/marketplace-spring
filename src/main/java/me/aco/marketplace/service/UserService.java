@@ -14,17 +14,11 @@ public class UserService {
 	@Autowired
 	private UsersRepository usersRepository;
 
-   public User getByUsername(String username) {
+	public User getByUsername(String username) {
 		List<User> users = usersRepository.findByUsername(username);
-		if (users.size() == 0)
+		if (users.isEmpty())
 			return null;
-		else
-			return users.get(0);
+		return users.get(0);
 	}
-	
-	public User saveUser(User user) {
-		user = usersRepository.save(user);
-		return user;
-	} 
     
 }
