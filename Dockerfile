@@ -6,6 +6,8 @@ EXPOSE 8080
 
 CMD ["catalina.sh", "run"]
 
+# for now, build war .\mvnw package -DskipTests
+
 # To build the image:
 #   docker build -t marketpl-spring-tomcat .
 

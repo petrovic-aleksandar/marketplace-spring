@@ -2,31 +2,29 @@ package me.aco.marketplace.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.PersistenceUnit;
 import me.aco.marketplace.model.User;
+import me.aco.marketplace.repository.UsersRepository;
 
 @Service
 public class UserService {
 
-    @PersistenceUnit(unitName = "marketplace")
-	private EntityManagerFactory emf;
+	@Autowired
+	private UsersRepository usersRepository;
 
    public User getByUsername(String username) {
-	EntityManager em = emf.createEntityManager();
-		List<User> users = em.createNamedQuery(User.getByUsername, User.class).setParameter("username", username).getResultList();
-		if (users.size() > 0)
-			return users.get(0);
-		else
+		List<User> users = usersRepository.findByUsername(username);
+		if (users.size() == 0)
 			return null;
+		else
+			return users.get(0);
 	}
 	
 	public User saveUser(User user) {
-		EntityManager em = emf.createEntityManager();
-		return em.merge(user);
+		user = usersRepository.save(user);
+		return user;
 	} 
     
 }

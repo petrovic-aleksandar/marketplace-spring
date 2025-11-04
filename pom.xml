@@ -29,6 +29,8 @@
 	</scm>
 	<properties>
 		<java.version>25</java.version>
+		<!--annotation processing behavior during compilation, needed for lombok-->
+		<maven.compiler.proc>full</maven.compiler.proc>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -48,11 +50,20 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--jakarta persistence-->
+		<!--jakarta persistence(3.2 not supported yet), driver-->
 		<dependency>
     		<groupId>jakarta.persistence</groupId>
     		<artifactId>jakarta.persistence-api</artifactId>
-    		<version>3.2.0</version>
+    		<version>3.1.0</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.postgresql</groupId>
+    		<artifactId>postgresql</artifactId>
+    		<version>42.6.0</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
 		<!--for auto get/set-->
@@ -60,13 +71,6 @@
     		<groupId>org.projectlombok</groupId>
     		<artifactId>lombok</artifactId>
     		<version>1.18.42</version>
-		</dependency>
-
-		<!-- for jwt tokens -->
-		<dependency>
-  			<groupId>com.auth0</groupId>
-  			<artifactId>java-jwt</artifactId>
-  			<version>4.5.0</version>
 		</dependency>
 
 		<!-- for jwt tokens -->

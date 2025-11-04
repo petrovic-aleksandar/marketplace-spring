@@ -5,7 +5,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./WebApi/Images:/usr/share/nginx/html
+      - ./Images:/usr/share/nginx/html
 
   db:
     image: postgres
@@ -15,7 +15,7 @@ services:
       POSTGRES_DB: marketplace
     hostname: dbhost
   
-  marketplace:
+  app:
      build:
        context: .
        dockerfile: Dockerfile
