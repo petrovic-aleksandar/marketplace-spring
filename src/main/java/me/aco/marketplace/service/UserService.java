@@ -1,12 +1,15 @@
 package me.aco.marketplace.service;
 
-import java.util.List;
+import java.security.NoSuchAlgorithmException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import me.aco.marketplace.dto.UserReq;
+import me.aco.marketplace.enums.UserRole;
 import me.aco.marketplace.model.User;
 import me.aco.marketplace.repository.UsersRepository;
+import me.aco.marketplace.util.SecurityUtil;
 
 @Service
 public class UserService {
@@ -14,11 +17,17 @@ public class UserService {
 	@Autowired
 	private UsersRepository usersRepository;
 
-	public User getByUsername(String username) {
-		List<User> users = usersRepository.findByUsername(username);
-		if (users.isEmpty())
-			return null;
-		return users.get(0);
+	public User update(UserReq request, User user) throws NoSuchAlgorithmException {
+		user.setUsername(request.getUsername());
+		if (request.isUpdatePassword()) {
+			user.setSalt(SecurityUtil.getSalt());
+			user.setPassword(SecurityUtil.get_SHA_512_SecurePassword(request.getPassword(), user.getSalt()));
+		}
+		user.setName(request.getName());
+		user.setEmail(request.getEmail());
+		user.setPhone(request.getPhone());
+		user.setRole(UserRole.valueOf(request.getRole()));
+		return usersRepository.save(user);
 	}
     
 }

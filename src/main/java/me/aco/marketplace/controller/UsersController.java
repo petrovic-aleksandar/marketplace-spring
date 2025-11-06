@@ -1,6 +1,7 @@
 package me.aco.marketplace.controller;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import me.aco.marketplace.dto.UserReq;
 import me.aco.marketplace.dto.UserResp;
+import me.aco.marketplace.enums.UserRole;
 import me.aco.marketplace.repository.UsersRepository;
+import me.aco.marketplace.service.UserService;
 
 @Async  ("asyncExecutor")
 @RequestMapping("/User")
@@ -24,6 +27,8 @@ public class UsersController {
 
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/{id}")
     public CompletableFuture<ResponseEntity<UserResp>> getUserById(@PathVariable("id") Long id) {
@@ -56,11 +61,15 @@ public class UsersController {
         if (req == null) 
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
 
-        var user = usersRepository.save(req.toUser());
-        if (user == null)
+        var sameUsernameUser = usersRepository.findByUsername(req.getUsername());
+        if (sameUsernameUser != null)
+            return CompletableFuture.completedFuture(ResponseEntity.status(409).build());
+
+        var addedUser = usersRepository.save(req.toUser());
+        if (addedUser == null)
             return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
 
-        var resp = new UserResp(user);
+        var resp = new UserResp(addedUser);
         return CompletableFuture.completedFuture(ResponseEntity.ok(resp));
     }
 
@@ -73,9 +82,52 @@ public class UsersController {
         if (user == null)
             return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
 
+        var updatedUser = userService.update(req, user);
+        if (updatedUser == null)
+            return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
+
         var resp = new UserResp(user);
         return CompletableFuture.completedFuture(ResponseEntity.ok(resp));
     }
+
+    @PostMapping("/deactivate/{id}")
+    public CompletableFuture<ResponseEntity<UserResp>> deactivateUser(@PathVariable("id") Long id) {
+        var user = usersRepository.findById(id).orElse(null);
+        if (user == null)
+            return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
+
+        user.setActive(false);
+        var updatedUser = usersRepository.save(user);
+        if (updatedUser == null)
+            return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
+
+        var resp = new UserResp(updatedUser);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(resp));
+    }
+
+    @PostMapping("/activate/{id}")
+    public CompletableFuture<ResponseEntity<UserResp>> activateUser(@PathVariable("id") Long id) {
+        var user = usersRepository.findById(id).orElse(null);
+        if (user == null)
+            return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
+
+        user.setActive(true);
+        var updatedUser = usersRepository.save(user);
+        if (updatedUser == null)
+            return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
+
+        var resp = new UserResp(updatedUser);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(resp));
+    }
+
+    @GetMapping("/roles")
+    public CompletableFuture<ResponseEntity<List<String>>> getUserRoles() {
+        List<String> result = new ArrayList<>();
+		UserRole[] roles =UserRole.values();
+		for (UserRole userRole : roles)
+			result.add(userRole.toString());
+		return CompletableFuture.supplyAsync(() -> ResponseEntity.ok(result));
+	}
 
     
 }
