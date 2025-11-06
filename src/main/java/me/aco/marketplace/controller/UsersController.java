@@ -20,7 +20,7 @@ import me.aco.marketplace.enums.UserRole;
 import me.aco.marketplace.repository.UsersRepository;
 import me.aco.marketplace.service.UserService;
 
-@Async  ("asyncExecutor")
+@Async("asyncExecutor")
 @RequestMapping("/User")
 @RestController
 public class UsersController {

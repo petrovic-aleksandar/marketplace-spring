@@ -19,7 +19,7 @@ import me.aco.marketplace.repository.TransfersRepository;
 import me.aco.marketplace.repository.UsersRepository;
 import me.aco.marketplace.service.TransferService;
 
-@Async  ("asyncExecutor")
+@Async("asyncExecutor")
 @RequestMapping("/Transfer")
 @RestController
 public class TransfersController {

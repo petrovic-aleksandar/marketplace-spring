@@ -20,7 +20,7 @@ import me.aco.marketplace.repository.UsersRepository;
 import me.aco.marketplace.service.AuthService;
 import me.aco.marketplace.util.JWTUtil;
 
-@Async  ("asyncExecutor")
+@Async("asyncExecutor")
 @RequestMapping("/Auth")
 @RestController
 public class AuthController {
