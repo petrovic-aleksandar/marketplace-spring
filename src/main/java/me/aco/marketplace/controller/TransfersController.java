@@ -33,7 +33,12 @@ public class TransfersController {
 
     @GetMapping("/{id}")
     public CompletableFuture<ResponseEntity<List<TransferResp>>> getByUserId(@PathVariable("id") Long id) {
-        List<Transfer> transfers = transfersRepository.findByUserId(id);
+        var userOpt = usersRepository.findById(id);
+        if (userOpt.isEmpty())
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
+        var user = userOpt.get();
+        List<Transfer> transfers = transfersRepository.findBySeller(user);
+        transfers.addAll(transfersRepository.findByBuyer(user));
         List<TransferResp> resp = transfers.stream().map(TransferResp::new).toList();
         return CompletableFuture.completedFuture(ResponseEntity.ok(resp));
     }
