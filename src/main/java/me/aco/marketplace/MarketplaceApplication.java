@@ -10,4 +10,6 @@ public class MarketplaceApplication {
 		SpringApplication.run(MarketplaceApplication.class, args);
 	}
 
+
+
 }
