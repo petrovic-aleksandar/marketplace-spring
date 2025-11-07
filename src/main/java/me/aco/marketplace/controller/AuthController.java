@@ -36,13 +36,14 @@ public class AuthController {
 	}
 
     @PostMapping("/login")
-    public TokenResp login(LoginReq req) {
+    public CompletableFuture<TokenResp> login(LoginReq req) {
         User loadedUser = usersRepository.findByUsername(req.getUsername()).get(0);
 		if (loadedUser == null)
 			return null;
 		else if (!authService.checkPassword(req, loadedUser))
 			return null;
-		return new TokenResp(JWTUtil.createToken(loadedUser), authService.createAndSaveRefreshToken(req));
+		TokenResp resp = new TokenResp(JWTUtil.createToken(loadedUser), authService.createAndSaveRefreshToken(req));
+		return CompletableFuture.completedFuture(resp);
     }
 
     @PostMapping("/register")
