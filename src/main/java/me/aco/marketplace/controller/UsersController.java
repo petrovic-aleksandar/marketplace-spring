@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,7 +58,7 @@ public class UsersController {
     }
 
     @PostMapping("/")
-    public CompletableFuture<ResponseEntity<UserResp>> createUser(UserReq req) throws NoSuchAlgorithmException {
+    public CompletableFuture<ResponseEntity<UserResp>> createUser(@RequestBody UserReq req) throws NoSuchAlgorithmException {
         if (req == null) 
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
 
@@ -74,7 +75,7 @@ public class UsersController {
     }
 
     @PostMapping("/{id}")
-    public CompletableFuture<ResponseEntity<UserResp>> updateUser(@PathVariable("id") Long id, UserReq req) throws NoSuchAlgorithmException {
+    public CompletableFuture<ResponseEntity<UserResp>> updateUser(@PathVariable("id") Long id, @RequestBody UserReq req) throws NoSuchAlgorithmException {
         if (req == null) 
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
 

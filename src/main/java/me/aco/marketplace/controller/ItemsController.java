@@ -9,12 +9,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import me.aco.marketplace.dto.ItemReq;
 import me.aco.marketplace.dto.ItemResp;
-import me.aco.marketplace.model.Item;
 import me.aco.marketplace.model.ItemType;
 import me.aco.marketplace.repository.ItemTypesRepository;
 import me.aco.marketplace.repository.ItemsRepository;
@@ -70,7 +70,7 @@ public class ItemsController {
     }
 
     @PostMapping
-    public CompletableFuture<ResponseEntity<ItemResp>> addItem(ItemReq req) {
+    public CompletableFuture<ResponseEntity<ItemResp>> addItem(@RequestBody ItemReq req) {
         var seller = usersRepository.findById(req.getSellerId());
         if (seller.isEmpty())
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());

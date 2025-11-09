@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,7 +45,7 @@ public class TransfersController {
     }
 
     @PostMapping("/payment")
-    public CompletableFuture<ResponseEntity<TransferResp>> addPayment(TransferReq req) {
+    public CompletableFuture<ResponseEntity<TransferResp>> addPayment(@RequestBody TransferReq req) {
         var seller = usersRepository.findById(req.getSellerId());
         if (seller.isEmpty())
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
@@ -55,7 +56,7 @@ public class TransfersController {
     }
 
     @PostMapping("/withdrawal")
-    public CompletableFuture<ResponseEntity<TransferResp>> addWithdrawal(TransferReq req) {
+    public CompletableFuture<ResponseEntity<TransferResp>> addWithdrawal(@RequestBody TransferReq req) {
         var buyer = usersRepository.findById(req.getSellerId());
         if (buyer.isEmpty())
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
@@ -66,7 +67,7 @@ public class TransfersController {
     }
 
     @PostMapping("/purchase")
-    public CompletableFuture<ResponseEntity<TransferResp>> addPurchase(TransferReq req) {
+    public CompletableFuture<ResponseEntity<TransferResp>> addPurchase(@RequestBody TransferReq req) {
         var buyer = usersRepository.findById(req.getBuyerId());
         if (buyer.isEmpty())
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());

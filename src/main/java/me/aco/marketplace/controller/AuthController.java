@@ -3,12 +3,16 @@ package me.aco.marketplace.controller;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.CompletableFuture;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import me.aco.marketplace.dto.LoginReq;
@@ -35,10 +39,10 @@ public class AuthController {
 		return "pong";
 	}
 
-    @PostMapping("/login")
-    public CompletableFuture<TokenResp> login(LoginReq req) {
+    @PostMapping(value = "/login")
+    public CompletableFuture<TokenResp> login(@RequestBody LoginReq req) {
         User loadedUser = usersRepository.findByUsername(req.getUsername()).get(0);
-		if (loadedUser == null)
+		if (loadedUser == null) 
 			return null;
 		else if (!authService.checkPassword(req, loadedUser))
 			return null;
@@ -46,8 +50,8 @@ public class AuthController {
 		return CompletableFuture.completedFuture(resp);
     }
 
-    @PostMapping("/register")
-    public CompletableFuture<ResponseEntity<UserResp>> register(UserRegReq req) throws NoSuchAlgorithmException {
+    @PostMapping(value = "/register")
+    public CompletableFuture<ResponseEntity<UserResp>> register(@RequestBody UserRegReq req) throws NoSuchAlgorithmException {
 		if (usersRepository.findByUsername(req.getUsername()).size() > 0)
 		return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
 		var addedUser = usersRepository.save(req.toUser());
