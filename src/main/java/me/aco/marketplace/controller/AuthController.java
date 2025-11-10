@@ -55,7 +55,10 @@ public class AuthController {
         return CompletableFuture.supplyAsync(() -> usersRepository.findSingleByUsername(req.getUsername())
                 .map(existingUser -> ResponseEntity.badRequest().<UserResp>build())
                 .orElseGet(() -> {
-                    User addedUser = usersRepository.save(userService.toUser(req));
+                    User newUser = userService.toUser(req);
+                    if (newUser == null)
+                        return ResponseEntity.internalServerError().<UserResp>build();
+                    User addedUser = usersRepository.save(newUser);
                     return ResponseEntity.ok(new UserResp(addedUser));
                 }));
     }
