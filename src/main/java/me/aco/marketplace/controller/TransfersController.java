@@ -3,7 +3,6 @@ package me.aco.marketplace.controller;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
 
 import me.aco.marketplace.dto.TransferReq;
 import me.aco.marketplace.dto.TransferResp;
@@ -23,17 +23,15 @@ import me.aco.marketplace.service.TransferService;
 @Async("asyncExecutor")
 @RequestMapping("/Transfer")
 @RestController
+@RequiredArgsConstructor
 public class TransfersController {
 
-    @Autowired
-    private TransfersRepository transfersRepository;
-    @Autowired
-    private UsersRepository usersRepository;
-    @Autowired
-    private TransferService transferService;
+    private final TransfersRepository transfersRepository;
+    private final UsersRepository usersRepository;
+    private final TransferService transferService;
 
     @GetMapping("/{id}")
-    public CompletableFuture<ResponseEntity<List<TransferResp>>> getByUserId(@PathVariable("id") Long id) {
+    public CompletableFuture<ResponseEntity<List<TransferResp>>> getByUserId(@PathVariable("id") long id) {
         var userOpt = usersRepository.findById(id);
         if (userOpt.isEmpty())
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());

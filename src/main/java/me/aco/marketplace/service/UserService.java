@@ -1,7 +1,5 @@
 package me.aco.marketplace.service;
 
-import java.security.NoSuchAlgorithmException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +16,7 @@ public class UserService {
 	@Autowired
 	private UsersRepository usersRepository;
 
-	public User update(UserReq request, User user) throws NoSuchAlgorithmException {
+	public User update(UserReq request, User user) {
 		user.setUsername(request.getUsername());
 		if (request.isUpdatePassword()) {
 			user.setPassword(SecurityUtil.hashPassword(request.getPassword()));

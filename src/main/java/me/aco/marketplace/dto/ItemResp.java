@@ -1,12 +1,11 @@
 package me.aco.marketplace.dto;
 
-import java.time.format.DateTimeFormatter;
-
 import lombok.Getter;
 import lombok.Setter;
 import me.aco.marketplace.model.Image;
 import me.aco.marketplace.model.Item;
 import me.aco.marketplace.model.ItemType;
+import me.aco.marketplace.util.DateFormats;
 
 @Getter
 @Setter
@@ -31,7 +30,7 @@ public class ItemResp {
 		this.price = item.getPrice();
 		this.type = item.getType();
 		this.active = item.isActive();
-		this.createdAt = item.getCreatedAt() != null ? item.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")) : "";
+		this.createdAt = item.getCreatedAt() != null ? item.getCreatedAt().format(DateFormats.ISO_INSTANT_NO_MILLIS) : "";
 		this.seller = new UserResp(item.getSeller());	
 	}
 

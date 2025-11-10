@@ -3,7 +3,6 @@ package me.aco.marketplace.controller;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
 
 import me.aco.marketplace.dto.ItemReq;
 import me.aco.marketplace.dto.ItemResp;
@@ -24,22 +24,18 @@ import me.aco.marketplace.service.ItemService;
 @Async("asyncExecutor")
 @RequestMapping("/Auth")
 @RestController
+@RequiredArgsConstructor
 public class ItemsController {
     
-    @Autowired
-    private ItemsRepository itemsRepository;
-    @Autowired
-    private UsersRepository usersRepository;
-    @Autowired
-    private ItemTypesRepository itemTypesRepository;
-    @Autowired
-    private ItemService itemService;
+    private final ItemsRepository itemsRepository;
+    private final UsersRepository usersRepository;
+    private final ItemTypesRepository itemTypesRepository;
+    private final ItemService itemService;
 
     @GetMapping("/{id}")
-    public CompletableFuture<ResponseEntity<ItemResp>> getItemById(@PathVariable("id") Long id) {
+    public CompletableFuture<ResponseEntity<ItemResp>> getItemById(@PathVariable("id") long id) {
 
-        if (id == null)
-            return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
+        // id is primitive, cannot be null; removed null check
 
         if (!itemsRepository.existsById(id))
             return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
@@ -52,7 +48,7 @@ public class ItemsController {
     }
 
     @GetMapping("/bySellerId/{sellerId}")
-    public CompletableFuture<ResponseEntity<List<ItemResp>>> getItemsBySellerId(@PathVariable("sellerId") Long sellerId) {
+    public CompletableFuture<ResponseEntity<List<ItemResp>>> getItemsBySellerId(@PathVariable("sellerId") long sellerId) {
         return CompletableFuture.supplyAsync(() -> {
             var items = itemsRepository.getItemsBySellerId(sellerId);
             var resp = items.stream().map(ItemResp::new).toList();
@@ -61,7 +57,7 @@ public class ItemsController {
     }
 
     @GetMapping("/byTypeId/{typeId}")
-    public CompletableFuture<ResponseEntity<List<ItemResp>>> getItemsByTypeId(@PathVariable("typeId") Long typeId) {
+    public CompletableFuture<ResponseEntity<List<ItemResp>>> getItemsByTypeId(@PathVariable("typeId") long typeId) {
         return CompletableFuture.supplyAsync(() -> {
             var items = itemsRepository.getItemsByTypeId(typeId);
             var resp = items.stream().map(ItemResp::new).toList();
@@ -84,7 +80,7 @@ public class ItemsController {
     }
 
     @PostMapping("/{itemId}")
-    public CompletableFuture<ResponseEntity<ItemResp>> updateItem(@PathVariable("itemId") Long itemId, ItemReq req) {
+    public CompletableFuture<ResponseEntity<ItemResp>> updateItem(@PathVariable("itemId") long itemId, ItemReq req) {
         var existingItemOpt = itemsRepository.findById(itemId);
         if (existingItemOpt.isEmpty())
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
@@ -101,41 +97,35 @@ public class ItemsController {
     }
 
     @PostMapping("/Deactivate/{id}")
-    public CompletableFuture<ResponseEntity<ItemResp>> deactivateItem(@PathVariable("id") Long id) {
+    public CompletableFuture<ResponseEntity<ItemResp>> deactivateItem(@PathVariable("id") long id) {
         var existingItemOpt = itemsRepository.findById(id);
         if (existingItemOpt.isEmpty())
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
         var existingItem = existingItemOpt.get();
         existingItem.setActive(false);
         var updatedItem = itemsRepository.save(existingItem);
-        if (updatedItem == null)
-            return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
         return CompletableFuture.completedFuture(ResponseEntity.ok(new ItemResp(updatedItem)));
     }
 
     @PostMapping("/Activate/{id}")
-    public CompletableFuture<ResponseEntity<ItemResp>> activateItem(@PathVariable("id") Long id) {
+    public CompletableFuture<ResponseEntity<ItemResp>> activateItem(@PathVariable("id") long id) {
         var existingItemOpt = itemsRepository.findById(id);
         if (existingItemOpt.isEmpty())
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
         var existingItem = existingItemOpt.get();
         existingItem.setActive(true);
         var updatedItem = itemsRepository.save(existingItem);
-        if (updatedItem == null)
-            return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
         return CompletableFuture.completedFuture(ResponseEntity.ok(new ItemResp(updatedItem)));
     }
 
     @PostMapping("/Delete/{id}")
-    public CompletableFuture<ResponseEntity<ItemResp>> deleteItem(@PathVariable("id") Long id) {
+    public CompletableFuture<ResponseEntity<ItemResp>> deleteItem(@PathVariable("id") long id) {
         var existingItemOpt = itemsRepository.findById(id);
         if (existingItemOpt.isEmpty())
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
         var existingItem = existingItemOpt.get();
         existingItem.setDeleted(true);
         var updatedItem = itemsRepository.save(existingItem);
-        if (updatedItem == null)
-            return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
         return CompletableFuture.completedFuture(ResponseEntity.ok(new ItemResp(updatedItem)));
     }
 

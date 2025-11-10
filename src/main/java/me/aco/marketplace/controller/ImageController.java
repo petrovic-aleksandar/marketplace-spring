@@ -6,11 +6,11 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,17 +27,15 @@ import me.aco.marketplace.service.ImageService;
 @Async("asyncExecutor")
 @RequestMapping("/Image")
 @RestController
+@RequiredArgsConstructor
 public class ImageController {
 
-    @Autowired
-    private ImagesRepository imagesRepository;
-    @Autowired
-    private ItemsRepository itemsRepository;
-    @Autowired
-    private ImageService imageService;
+    private final ImagesRepository imagesRepository;
+    private final ItemsRepository itemsRepository;
+    private final ImageService imageService;
 
     @GetMapping("/getByItemId/{itemId}")
-    public CompletableFuture<ResponseEntity<List<ImageResponse>>> getImagesByItemId(@PathVariable("itemId") Long itemId) {
+    public CompletableFuture<ResponseEntity<List<ImageResponse>>> getImagesByItemId(@PathVariable("itemId") long itemId) {
         return CompletableFuture.supplyAsync(() -> {
             var images = imagesRepository.findByItemId(itemId);
             var resp = images.stream().map(ImageResponse::new).toList();
@@ -46,7 +44,7 @@ public class ImageController {
     }
 
     @PostMapping(value = "/{itemId}", consumes = {"multipart/form-data"})
-	public CompletableFuture<ResponseEntity<ImageResponse>> add(@PathVariable("itemId") Long itemId, @RequestParam("file") MultipartFile file) {
+    public CompletableFuture<ResponseEntity<ImageResponse>> add(@PathVariable("itemId") long itemId, @RequestParam("file") MultipartFile file) {
 		var itemOpt = itemsRepository.findById(itemId);
         if (itemOpt.isEmpty())  
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
@@ -70,7 +68,7 @@ public class ImageController {
 	}
 
     @PostMapping("/front/{imageId}")
-    public CompletableFuture<ResponseEntity<ImageResponse>> makeImageFront(@PathVariable("imageId") Long imageId) {
+    public CompletableFuture<ResponseEntity<ImageResponse>> makeImageFront(@PathVariable("imageId") long imageId) {
         return CompletableFuture.supplyAsync(() -> {
             var imageOpt = imagesRepository.findById(imageId);
             if (imageOpt.isEmpty())
@@ -84,7 +82,7 @@ public class ImageController {
     }
 
     @DeleteMapping("/{imageId}")
-    public CompletableFuture<ResponseEntity<Void>> deleteImageById(@PathVariable("imageId") Long imageId) {
+    public CompletableFuture<ResponseEntity<Void>> deleteImageById(@PathVariable("imageId") long imageId) {
         return CompletableFuture.supplyAsync(() -> {
             if (!imagesRepository.existsById(imageId))
                 return ResponseEntity.notFound().build();
