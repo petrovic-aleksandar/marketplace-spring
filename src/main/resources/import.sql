@@ -1,6 +1,6 @@
-insert into appuser (id, username, password, salt, name, email, phone, balance, role, active) values (1, 'admin', '882615587793bdf29fe32e1ea466c85a6ad45920dd476aa45c58072aa044dc213d0cf8a622cc8d5ad2c49681327ad9aaf6183f6cabd6619ce6a3bcc64d2159d6', '[B@4861a26c', 'The Admin', 'mm@gmail.com', '67 123 123', 0.0, 'Admin', true);
-insert into appuser (id, username, password, salt, name, email, phone, balance, role, active) values (2, 'john', '69836c291eb16d62ed3645dd9c0ad40ad86eb239d36ad299ac9d2cf9408c64ae084071ae5cd29dbea5e947ca504601609c2864cf83ecf69ad2c53a46d05054b7', '[B@2db732d1', 'John Doe', 'pp@gmail.com', '67 100 100', 0.0, 'User', true);
-insert into appuser (id, username, password, salt, name, email, phone, balance, role, active) values (3, 'rich', 'f2a20305e37a64a569b709b656040dbc09884b8e2f89c36480d5cb9748033c087741c5bf89a0d16900ce27f9d43ba6f180f05017d2ed38064a3bbbb252baafa6', '[B@64838816', 'Guy Rich', 'jj@gmail.com', '67 111 222', 100000.0, 'User', true);
+insert into appuser (id, username, password, name, email, phone, balance, role, active) values (1, 'admin', '$2a$10$BGDNy/UW5ORUfHGZlTEw.ew0d4lZAUgGwEMUg75db2vxtApznQzYa', 'The Admin', 'mm@gmail.com', '67 123 123', 0.0, 'Admin', true);
+insert into appuser (id, username, password, name, email, phone, balance, role, active) values (2, 'john', '$2a$10$BGDNy/UW5ORUfHGZlTEw.ew0d4lZAUgGwEMUg75db2vxtApznQzYa', 'John Doe', 'pp@gmail.com', '67 100 100', 0.0, 'User', true);
+insert into appuser (id, username, password, name, email, phone, balance, role, active) values (3, 'rich', '$2a$10$BGDNy/UW5ORUfHGZlTEw.ew0d4lZAUgGwEMUg75db2vxtApznQzYa', 'Guy Rich', 'jj@gmail.com', '67 111 222', 100000.0, 'User', true);
 select setval('user_seq', 3);
 
 insert into item_type (id, name, description, image_path) values (1, 'Cars&Vehicles', 'Cars and other transportation. Scooters, bikes, trains, boats, yachts, airships..', 'Categories/1.jpg');

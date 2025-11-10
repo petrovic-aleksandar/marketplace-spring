@@ -1,7 +1,5 @@
 package me.aco.marketplace.dto;
 
-import java.security.NoSuchAlgorithmException;
-
 import me.aco.marketplace.enums.UserRole;
 import me.aco.marketplace.model.User;
 import me.aco.marketplace.util.SecurityUtil;
@@ -14,11 +12,10 @@ public class UserRegReq {
 	private String email;
 	private String phone;
 
-	public User toUser() throws NoSuchAlgorithmException {
+	public User toUser() {
 		User user = new User();
 		user.setUsername(username);
-		user.setSalt(SecurityUtil.getSalt());
-		user.setPassword(SecurityUtil.get_SHA_512_SecurePassword(password, user.getSalt()));
+		user.setPassword(SecurityUtil.hashPassword(password));
 		user.setName(name);
 		user.setEmail(email);
 		user.setPhone(phone);

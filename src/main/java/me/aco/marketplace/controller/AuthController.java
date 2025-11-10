@@ -38,20 +38,14 @@ public class AuthController {
 
     @PostMapping(value = "/login")
     public CompletableFuture<ResponseEntity<TokenResp>> login(@RequestBody LoginReq req) {
-        return CompletableFuture.supplyAsync(() -> 
-            usersRepository.findSingleByUsername(req.getUsername())
-                .map(loadedUser -> {
-                    if (!authService.checkPassword(req, loadedUser)) {
-                        return ResponseEntity.badRequest().<TokenResp>build();
-                    }
-                    TokenResp resp = new TokenResp(
-                        JWTUtil.createToken(loadedUser), 
-                        authService.createAndSaveRefreshToken(req)
-                    );
-                    return ResponseEntity.ok(resp);
-                })
-                .orElse(ResponseEntity.notFound().<TokenResp>build())
-        );
+        return CompletableFuture.supplyAsync(() -> {
+            User user = authService.authenticate(req); // may throw ResourceNotFoundException or AuthenticationException
+            TokenResp resp = new TokenResp(
+                JWTUtil.createToken(user),
+                authService.createAndSaveRefreshToken(user)
+            );
+            return ResponseEntity.ok(resp);
+        });
     }
 
     @PostMapping(value = "/register")
@@ -60,12 +54,8 @@ public class AuthController {
             usersRepository.findSingleByUsername(req.getUsername())
                 .map(existingUser -> ResponseEntity.badRequest().<UserResp>build())
                 .orElseGet(() -> {
-                    try {
-                        User addedUser = usersRepository.save(req.toUser());
-                        return ResponseEntity.ok(new UserResp(addedUser));
-                    } catch (NoSuchAlgorithmException e) {
-                        return ResponseEntity.internalServerError().<UserResp>build();
-                    }
+                    User addedUser = usersRepository.save(req.toUser());
+                    return ResponseEntity.ok(new UserResp(addedUser));
                 })
         );
     }

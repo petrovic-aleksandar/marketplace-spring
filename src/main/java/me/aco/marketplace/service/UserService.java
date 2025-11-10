@@ -20,8 +20,7 @@ public class UserService {
 	public User update(UserReq request, User user) throws NoSuchAlgorithmException {
 		user.setUsername(request.getUsername());
 		if (request.isUpdatePassword()) {
-			user.setSalt(SecurityUtil.getSalt());
-			user.setPassword(SecurityUtil.get_SHA_512_SecurePassword(request.getPassword(), user.getSalt()));
+			user.setPassword(SecurityUtil.hashPassword(request.getPassword()));
 		}
 		user.setName(request.getName());
 		user.setEmail(request.getEmail());

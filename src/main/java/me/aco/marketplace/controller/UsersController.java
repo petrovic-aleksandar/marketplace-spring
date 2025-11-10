@@ -62,7 +62,7 @@ public class UsersController {
         if (req == null) 
             return CompletableFuture.completedFuture(ResponseEntity.badRequest().build());
 
-        var sameUsernameUser = usersRepository.findByUsername(req.getUsername());
+        var sameUsernameUser = usersRepository.findSingleByUsername(req.getUsername());
         if (sameUsernameUser != null)
             return CompletableFuture.completedFuture(ResponseEntity.status(409).build());
 

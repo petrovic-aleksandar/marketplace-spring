@@ -19,8 +19,7 @@ public class UserReq {
 	public User toUser() throws NoSuchAlgorithmException {
 		User user = new User();
 		user.setUsername(username);
-		user.setSalt(SecurityUtil.getSalt());
-		user.setPassword(SecurityUtil.get_SHA_512_SecurePassword(password, user.getSalt()));
+		user.setPassword(SecurityUtil.hashPassword(password));
 		user.setName(name);
 		user.setEmail(email);
 		user.setPhone(phone);
