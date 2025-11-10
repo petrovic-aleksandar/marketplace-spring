@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import me.aco.marketplace.dto.UserRegReq;
 import me.aco.marketplace.dto.UserReq;
 import me.aco.marketplace.enums.UserRole;
 import me.aco.marketplace.model.User;
@@ -27,6 +28,30 @@ public class UserService {
 		user.setPhone(request.getPhone());
 		user.setRole(UserRole.valueOf(request.getRole()));
 		return usersRepository.save(user);
+	}
+
+	public User toUser(UserReq request) {
+		User user = new User();
+		user.setUsername(request.getUsername());
+		user.setPassword(SecurityUtil.hashPassword(request.getPassword()));
+		user.setName(request.getName());
+		user.setEmail(request.getEmail());
+		user.setPhone(request.getPhone());
+		user.setRole(UserRole.valueOf(request.getRole()));
+		user.setActive(true);
+		return user;
+	}
+
+	public User toUser(UserRegReq request) {
+		User user = new User();
+		user.setUsername(request.getUsername());
+		user.setPassword(SecurityUtil.hashPassword(request.getPassword()));
+		user.setName(request.getName());
+		user.setEmail(request.getEmail());
+		user.setPhone(request.getPhone());
+		user.setRole(UserRole.User);
+		user.setActive(true);
+		return user;
 	}
     
 }

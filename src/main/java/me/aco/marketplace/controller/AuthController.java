@@ -19,6 +19,7 @@ import me.aco.marketplace.dto.UserResp;
 import me.aco.marketplace.model.User;
 import me.aco.marketplace.repository.UsersRepository;
 import me.aco.marketplace.service.AuthService;
+import me.aco.marketplace.service.UserService;
 import me.aco.marketplace.util.JWTUtil;
 
 @Async("asyncExecutor")
@@ -30,35 +31,36 @@ public class AuthController {
     private AuthService authService;
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private UserService userService;
 
-	@GetMapping("/ping")
-	public String ping() {
-		return "pong";
-	}
+    @GetMapping("/ping")
+    public String ping() {
+        return "pong";
+    }
 
     @PostMapping(value = "/login")
     public CompletableFuture<ResponseEntity<TokenResp>> login(@RequestBody LoginReq req) {
+
         return CompletableFuture.supplyAsync(() -> {
+            
             User user = authService.authenticate(req); // may throw ResourceNotFoundException or AuthenticationException
             TokenResp resp = new TokenResp(
-                JWTUtil.createToken(user),
-                authService.createAndSaveRefreshToken(user)
-            );
+                    JWTUtil.createToken(user),
+                    authService.createAndSaveRefreshToken(user));
             return ResponseEntity.ok(resp);
         });
     }
 
     @PostMapping(value = "/register")
     public CompletableFuture<ResponseEntity<UserResp>> register(@RequestBody UserRegReq req) {
-        return CompletableFuture.supplyAsync(() ->
-            usersRepository.findSingleByUsername(req.getUsername())
+
+        return CompletableFuture.supplyAsync(() -> usersRepository.findSingleByUsername(req.getUsername())
                 .map(existingUser -> ResponseEntity.badRequest().<UserResp>build())
                 .orElseGet(() -> {
-                    User addedUser = usersRepository.save(req.toUser());
+                    User addedUser = usersRepository.save(userService.toUser(req));
                     return ResponseEntity.ok(new UserResp(addedUser));
-                })
-        );
+                }));
     }
-    
 
 }

@@ -1,7 +1,11 @@
 package me.aco.marketplace.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.aco.marketplace.model.User;
 
+@Getter
+@Setter
 public class UserResp {
 	
 	private long id;
@@ -23,55 +27,6 @@ public class UserResp {
 		this.balance = user.getBalance();
 		this.role = user.getRole().toString();
 		this.active = user.isActive();
-	}
-	
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	public double getBalance() {
-		return balance;
-	}
-	public void setBalance(double balance) {
-		this.balance = balance;
-	}
-	public String getRole() {
-		return role;
-	}
-	public void setRole(String role) {
-		this.role = role;
-	}
-	public boolean isActive() {
-		return active;
-	}
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 }

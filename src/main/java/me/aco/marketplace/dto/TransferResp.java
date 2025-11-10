@@ -2,8 +2,12 @@ package me.aco.marketplace.dto;
 
 import java.time.format.DateTimeFormatter;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.aco.marketplace.model.Transfer;
 
+@Getter
+@Setter
 public class TransferResp {
 	
 	private long id;
@@ -22,50 +26,6 @@ public class TransferResp {
 		buyer = new UserResp(transfer.getBuyer());
 		seller = new UserResp(transfer.getSeller());
 		item = new ItemResp(transfer.getItem());
-	}
-		
-	
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public double getAmount() {
-		return amount;
-	}
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
-	public String getTime() {
-		return time;
-	}
-	public void setTime(String time) {
-		this.time = time;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public UserResp getBuyer() {
-		return buyer;
-	}
-	public void setBuyer(UserResp buyer) {
-		this.buyer = buyer;
-	}
-	public UserResp getSeller() {
-		return seller;
-	}
-	public void setSeller(UserResp seller) {
-		this.seller = seller;
-	}
-	public ItemResp getItem() {
-		return item;
-	}
-	public void setItem(ItemResp item) {
-		this.item = item;
 	}
 
 }
